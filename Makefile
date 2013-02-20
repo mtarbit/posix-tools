@@ -1,6 +1,6 @@
 CFLAGS = -Wall
 
-objects = true false pwd
+objects = true false pwd echo
 
 all: $(objects)
 
