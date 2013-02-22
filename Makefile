@@ -1,8 +1,15 @@
-CFLAGS = -Wall
+CFLAGS = -Wall -Iinclude
+ARFLAGS = cr
+VPATH = src
 
-objects = true false pwd echo
+targets = echo false pwd true
+archive = libpos.a
 
-all: $(objects)
+.PHONY: all clean
+
+all: $(targets)
+$(targets): $(archive)
+$(archive): $(archive)(lib_pos_err.o)
 
 clean:
-	rm $(objects)
+	-rm $(archive) $(targets)

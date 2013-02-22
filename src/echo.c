@@ -1,5 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include "pos.h"
 #include <string.h>
 
 int main(int argc, char *argv[]) {
@@ -15,7 +14,7 @@ int main(int argc, char *argv[]) {
         n_option = 0;
     }
 
-    for (i = 0; i <= argc; i++) {
+    for (i = 0; i < argc; i++) {
         if (i > 0) putchar(' ');
         printf("%s", argv[i]);
     }
