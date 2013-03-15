@@ -2,7 +2,7 @@ CFLAGS = -Wall -Iinclude
 ARFLAGS = cr
 VPATH = src
 
-targets = cat echo env false pwd true
+targets = cat echo env false ls pwd true
 archive = libpos.a
 
 .PHONY: all clean
