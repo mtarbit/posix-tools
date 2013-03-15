@@ -30,11 +30,13 @@ int main(int argc, char *argv[]) {
     int (*scandir_skip)(const struct dirent *);
     int (*scandir_sort)(const struct dirent **, const struct dirent **);
 
-    int A_option, a_option, f_option;
-
     int i;
     int filec;
     char **filev;
+
+    int A_option = 0,
+        a_option = 0,
+        f_option = 0;
 
     while ((opt = getopt(argc, argv, "Aaf")) != -1) {
         switch (opt) {
