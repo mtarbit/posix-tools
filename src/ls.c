@@ -93,10 +93,8 @@ int main(int argc, char *argv[]) {
             err("stat"); continue;
         }
 
-        if (i > 0) puts("");
-
         if (statbuf.st_mode & S_IFDIR) {
-            if (filec > 1) printf("%s:\n", filev[i]);
+            if (filec > 1) printf("%s%s:\n", (i>0 ? "\n":""), filev[i]);
             list_dir(filev[i], list_skip, list_sort);
         } else {
             list_file(filev[i]);
