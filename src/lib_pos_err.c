@@ -1,7 +1,7 @@
 #include "pos.h"
 #include <string.h>
 
-void die(const char *err_func) {
+void err(const char *err_func) {
     char *err_msg = "Error - Calling ";
     size_t buf_size = strlen(err_msg) + strlen(err_func) + 1;
     char buf[buf_size];
@@ -13,7 +13,11 @@ void die(const char *err_func) {
     } else {
         printf("%s.\n", buf);
     }
+}
 
+
+void die(const char *err_func) {
+    err(err_func);
     exit(EXIT_FAILURE);
 }
 
