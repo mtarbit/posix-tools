@@ -6,6 +6,9 @@
 #include <dirent.h>
 #include <string.h>
 #include <strings.h>
+#include <pwd.h>
+#include <grp.h>
+#include <time.h>
 
 int list_skip_hidden(const struct dirent *ent) {
     return *ent->d_name != '.';
@@ -20,23 +23,63 @@ int list_sort_alpha(const struct dirent **e1, const struct dirent **e2) {
 }
 
 void usage(const char *program_name) {
-    fprintf(stderr, "Usage: %s [-Aaf]... [FILE]...\n", program_name);
+    fprintf(stderr, "Usage: %s [-Aafl]... [FILE]...\n", program_name);
     exit(EXIT_FAILURE);
 }
 
-void list_file(const char *name) {
+void list_file_short(const char *dir_name, const char *name) {
     puts(name);
 }
 
-void list_dir(const char *name, int (*skip)(const struct dirent *), int (*sort)(const struct dirent **, const struct dirent **)) {
+void list_file_long(const char *dir_name, const char *name) {
+    size_t path_size = strlen(dir_name) + strlen(name) + 2;
+    char path[path_size];
+
+    struct stat sb;
+    struct passwd *pb;
+    struct group *gb;
+
+    int time_str_max = 13;
+    char time_str[time_str_max];
+
+    snprintf(path, path_size, "%s/%s", dir_name, name);
+
+    if (stat(path, &sb) == -1) {
+        err("stat"); return;
+    }
+
+    if ((pb = getpwuid(sb.st_uid)) == NULL) {
+        err("getpwuid"); return;
+    }
+
+    if ((gb = getgrgid(sb.st_gid)) == NULL) {
+        err("getgrgid"); return;
+    }
+
+    strftime(time_str, time_str_max, "%b %e %H:%M", localtime(&sb.st_mtime));
+
+    printf("%lo %u %s %s %4u %s %s\n",
+           (unsigned long)sb.st_mode,
+           (unsigned int)sb.st_nlink,
+           pb->pw_name,
+           gb->gr_name,
+           (unsigned int)sb.st_size,
+           time_str,
+           name);
+}
+
+void list_dir(const char *dir_name,
+              int (*skip)(const struct dirent *),
+              int (*sort)(const struct dirent **, const struct dirent **),
+              void (*list)(const char *, const char *)) {
     int n;
     struct dirent **ents;
 
-    if ((n = scandir(name, &ents, skip, sort)) == -1) {
+    if ((n = scandir(dir_name, &ents, skip, sort)) == -1) {
         err("scandir");
     } else {
         while (n--) {
-            list_file(ents[n]->d_name);
+            list(dir_name, ents[n]->d_name);
             free(ents[n]);
         }
         free(ents);
@@ -48,6 +91,7 @@ int main(int argc, char *argv[]) {
 
     int (*list_skip)(const struct dirent *);
     int (*list_sort)(const struct dirent **, const struct dirent **);
+    void (*list_file)(const char *, const char *);
 
     int i;
     int filec;
@@ -56,13 +100,15 @@ int main(int argc, char *argv[]) {
 
     int A_option = 0,
         a_option = 0,
-        f_option = 0;
+        f_option = 0,
+        l_option = 0;
 
-    while ((opt = getopt(argc, argv, "Aaf")) != -1) {
+    while ((opt = getopt(argc, argv, "Aafl")) != -1) {
         switch (opt) {
             case 'A': A_option = 1; break;
             case 'a': a_option = 1; break;
             case 'f': f_option = 1; break;
+            case 'l': l_option = 1; break;
             default:  usage(argv[0]);
         }
     }
@@ -81,6 +127,12 @@ int main(int argc, char *argv[]) {
         list_sort = *list_sort_alpha;
     }
 
+    if (l_option) {
+        list_file = *list_file_long;
+    } else {
+        list_file = *list_file_short;
+    }
+
     filec = argc - optind;
     filev = &argv[optind];
 
@@ -95,9 +147,9 @@ int main(int argc, char *argv[]) {
 
         if (statbuf.st_mode & S_IFDIR) {
             if (filec > 1) printf("%s%s:\n", (i>0 ? "\n":""), filev[i]);
-            list_dir(filev[i], list_skip, list_sort);
+            list_dir(filev[i], list_skip, list_sort, list_file);
         } else {
-            list_file(filev[i]);
+            list_file(".", filev[i]);
         }
     }
 
