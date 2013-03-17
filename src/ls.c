@@ -27,7 +27,7 @@ void usage(const char *program_name) {
     exit(EXIT_FAILURE);
 }
 
-void get_mode(char *str, size_t str_max, mode_t mode) {
+void get_mode_str(char *str, size_t str_max, mode_t mode) {
     char format_char;
     char owner_str[4];
     char group_str[4];
@@ -62,6 +62,18 @@ void get_mode(char *str, size_t str_max, mode_t mode) {
     snprintf(str, str_max, "%c%s%s%s", format_char, owner_str, group_str, other_str);
 }
 
+void get_time_str(char *str, size_t str_max, time_t t) {
+    char *fmt;
+
+    if (t > time(NULL) - 60 * 60 * 24 * 30 * 6) {
+        fmt = "%b %e %H:%M";
+    } else {
+        fmt = "%b %e %_5Y";
+    }
+
+    strftime(str, str_max, fmt, localtime(&t));
+}
+
 void list_file_short(const char *dir_name, const char *name) {
     puts(name);
 }
@@ -94,8 +106,8 @@ void list_file_long(const char *dir_name, const char *name) {
         err("getgrgid"); return;
     }
 
-    get_mode(mode_str, mode_str_max, sb.st_mode);
-    strftime(time_str, time_str_max, "%b %e %H:%M", localtime(&sb.st_mtime));
+    get_mode_str(mode_str, mode_str_max, sb.st_mode);
+    get_time_str(time_str, time_str_max, sb.st_mtime);
 
     printf("%s %u %s %s %5u %s %s\n",
            mode_str,
