@@ -127,6 +127,16 @@ void get_time_str(char *str, size_t str_max, time_t t) {
     strftime(str, str_max, fmt, localtime(&t));
 }
 
+void get_link_str(char *str, size_t str_max, const char *path_str) {
+    str = realloc(str, str_max + 4);
+
+    readlink(path_str, str, str_max);
+    str[str_max] = '\0';
+
+    memmove(str + 4, str, str_max);
+    memmove(str, " -> ", 4);
+}
+
 void list_file_short(const char *dir_name, const char *name) {
     puts(name);
 }
@@ -134,6 +144,8 @@ void list_file_short(const char *dir_name, const char *name) {
 void list_file_long(const char *dir_name, const char *name) {
     size_t path_str_max = strlen(dir_name) + strlen(name) + 2;
     char path_str[path_str_max];
+
+    char *link_str;
 
     size_t mode_str_max = 11;
     char mode_str[mode_str_max];
@@ -153,6 +165,13 @@ void list_file_long(const char *dir_name, const char *name) {
         if (lstat(path_str, &sb) == -1) { err("lstat"); return; }
     }
 
+    if (L_option || !S_ISLNK(sb.st_mode)) {
+        link_str = "";
+    } else {
+        link_str = malloc(sb.st_size + 1);
+        get_link_str(link_str, sb.st_size + 1, path_str);
+    }
+
     if ((pb = getpwuid(sb.st_uid)) == NULL) {
         err("getpwuid"); return;
     }
@@ -164,14 +183,17 @@ void list_file_long(const char *dir_name, const char *name) {
     get_mode_str(mode_str, mode_str_max, sb.st_mode);
     get_time_str(time_str, time_str_max, sb.st_mtime);
 
-    printf("%s %u %s %s %5u %s %s\n",
+    printf("%s %u %s %s %5u %s %s%s\n",
            mode_str,
            (unsigned int)sb.st_nlink,
            pb->pw_name,
            gb->gr_name,
            (unsigned int)sb.st_size,
            time_str,
-           name);
+           name,
+           link_str);
+
+    if (*link_str) free(link_str);
 }
 
 void list_dir(const char *dir_name,
