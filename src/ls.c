@@ -10,6 +10,12 @@
 #include <grp.h>
 #include <time.h>
 
+int A_option = 0,
+    L_option = 0,
+    a_option = 0,
+    f_option = 0,
+    l_option = 0;
+
 int list_skip_hidden(const struct dirent *ent) {
     return *ent->d_name != '.';
 }
@@ -23,7 +29,7 @@ int list_sort_alpha(const struct dirent **e1, const struct dirent **e2) {
 }
 
 void usage(const char *program_name) {
-    fprintf(stderr, "Usage: %s [-Aafl]... [FILE]...\n", program_name);
+    fprintf(stderr, "Usage: %s [-ALafl]... [FILE]...\n", program_name);
     exit(EXIT_FAILURE);
 }
 
@@ -94,8 +100,10 @@ void list_file_long(const char *dir_name, const char *name) {
 
     snprintf(path_str, path_str_max, "%s/%s", dir_name, name);
 
-    if (lstat(path_str, &sb) == -1) {
-        err("lstat"); return;
+    if (L_option) {
+        if (stat(path_str, &sb) == -1) { err("stat"); return; }
+    } else {
+        if (lstat(path_str, &sb) == -1) { err("lstat"); return; }
     }
 
     if ((pb = getpwuid(sb.st_uid)) == NULL) {
@@ -149,14 +157,10 @@ int main(int argc, char *argv[]) {
     char **filev;
     struct stat statbuf;
 
-    int A_option = 0,
-        a_option = 0,
-        f_option = 0,
-        l_option = 0;
-
-    while ((opt = getopt(argc, argv, "Aafl")) != -1) {
+    while ((opt = getopt(argc, argv, "ALafl")) != -1) {
         switch (opt) {
             case 'A': A_option = 1; break;
+            case 'L': L_option = 1; break;
             case 'a': a_option = 1; break;
             case 'f': f_option = 1; break;
             case 'l': l_option = 1; break;
