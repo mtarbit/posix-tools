@@ -10,6 +10,53 @@
 #include <grp.h>
 #include <time.h>
 
+/*
+Notes on options (for reference during development)
+===================================================
+
+Filtering
+---------
+x -A Write out all directory entries, including those whose names begin with a <period> ( '.' ) but excluding the entries dot and dot-dot (if they exist).
+x -a Write out all directory entries, including those whose names begin with a <period> ( '.' ).
+
+Sorting
+-------
+  -S Sort with the primary key being file size (in decreasing order) and the secondary key being filename in the collating sequence (in increasing order).
+x -f List the entries in directory operands in the order they appear in the directory. The behavior for non-directory operands is unspecified. This option shall turn off -l, -t, -S, -s, and -r, and shall turn on -a.
+  -r Reverse the order of the sort to get reverse collating sequence oldest first, or smallest file size first depending on the other options given.
+  -t Sort with the primary key being time modified (most recently modified first) and the secondary key being filename in the collating sequence. For a symbolic link, the time used as the sort key is that of the symbolic link itself, unless ls is evaluating its file information to be that of the file referenced by the link (see the -H and -L options).
+
+Column values
+-------------
+  -c Use time of last modification of the file status information (see <sys/stat.h> in the System Interfaces volume of POSIX.1-2008) instead of last modification of the file itself for sorting ( -t) or writing ( -l).
+  -i For each file, write the file's file serial number (see stat() in the System Interfaces volume of POSIX.1-2008).
+  -k Set the block size for the -s option and the per-directory block count written for the -l, -n, and -s  options (see the STDOUT section) to 1024 bytes.
+  -n The same as -l, except that the owner's UID and GID numbers shall be written, rather than the associated character strings.
+  -p Write a <slash> ( '/' ) after each filename if that file is a directory.
+  -q Force each instance of non-printable filename characters and <tab> characters to be written as the <question-mark> ( '?' ) character. Implementations may provide this option by default if the output is to a terminal device.
+  -s Indicate the total number of file system blocks consumed by each file displayed. If the -k option is also specified, the block size shall be 1024 bytes; otherwise, the block size is implementation-defined.
+  -u Use time of last access (see <sys/stat.h>) instead of last modification of the file for sorting ( -t) or writing ( -l).
+
+Symbolic links
+--------------
+  -H Evaluate the file information and file type for symbolic links specified on the command line to be those of the file referenced by the link, and not the link itself; however, ls shall write the name of the link itself and not the file referenced by the link.
+x -L Evaluate the file information and file type for all symbolic links (whether named on the command line or encountered in a file hierarchy) to be those of the file referenced by the link, and not the link itself; however, ls shall write the name of the link itself and not the file referenced by the link. When -L is used with -l, write the contents of symbolic links in the long format (see the STDOUT section).
+
+Output format
+-------------
+  -C Write multi-text-column output with entries sorted down the columns, according to the collating sequence. The number of text columns and the column separator characters are unspecified, but should be adapted to the nature of the output device.
+x -l (The letter ell.) Do not follow symbolic links named as operands unless the -H or -L options are specified. Write out in long format (see the STDOUT section). When -l (ell) is specified, -1 (one) shall be assumed.
+  -m Stream output format; list files across the page, separated by <comma> characters.
+  -x The same as -C, except that the multi-text-column output is produced with entries sorted across, rather than down, the columns.
+  -1 (The numeric digit one.) Force output to be one entry per line.
+
+Miscellaneous
+-------------
+  -F Do not follow symbolic links named as operands unless the -H or -L options are specified. Write a <slash> ( '/' ) immediately after each pathname that is a directory, an <asterisk> ( '*' ) after each that is executable, a <vertical-line> ( '|' ) after each that is a FIFO, and an at-sign ( '@' ) after each that is a symbolic link. For other file types, other symbols may be written.
+  -d Do not follow symbolic links named as operands unless the -H or -L options are specified. Do not treat directories differently than other types of files. The use of -d with -R produces unspecified results.
+  -R Recursively list subdirectories encountered. When a symbolic link to a directory is encountered, the directory shall not be recursively listed unless the -L option is specified.
+*/
+
 int A_option = 0,
     L_option = 0,
     a_option = 0,
