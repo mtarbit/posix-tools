@@ -45,12 +45,14 @@ void get_mode(char *str, size_t str_max, mode_t mode) {
     snprintf(owner_str, 4, "%c%c%c",
              mode & S_IRUSR ? 'r':'-',
              mode & S_IWUSR ? 'w':'-',
-             mode & S_IXUSR ? 'x':'-');
+             mode & S_ISUID ? (mode & S_IXUSR ? 's':'S')
+                            : (mode & S_IXUSR ? 'x':'-'));
 
     snprintf(group_str, 4, "%c%c%c",
              mode & S_IRGRP ? 'r':'-',
              mode & S_IWGRP ? 'w':'-',
-             mode & S_IXGRP ? 'x':'-');
+             mode & S_ISGID ? (mode & S_IXGRP ? 's':'S')
+                            : (mode & S_IXGRP ? 'x':'-'));
 
     snprintf(other_str, 4, "%c%c%c",
              mode & S_IROTH ? 'r':'-',
