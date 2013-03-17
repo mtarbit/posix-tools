@@ -94,8 +94,8 @@ void list_file_long(const char *dir_name, const char *name) {
 
     snprintf(path_str, path_str_max, "%s/%s", dir_name, name);
 
-    if (stat(path_str, &sb) == -1) {
-        err("stat"); return;
+    if (lstat(path_str, &sb) == -1) {
+        err("lstat"); return;
     }
 
     if ((pb = getpwuid(sb.st_uid)) == NULL) {
