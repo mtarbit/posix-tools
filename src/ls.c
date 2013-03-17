@@ -27,24 +27,60 @@ void usage(const char *program_name) {
     exit(EXIT_FAILURE);
 }
 
+void get_mode(char *str, size_t str_max, mode_t mode) {
+    char format_char;
+    char owner_str[4];
+    char group_str[4];
+    char other_str[4];
+
+    switch (mode & S_IFMT) {
+        case S_IFBLK: format_char = 'b'; break;
+        case S_IFCHR: format_char = 'c'; break;
+        case S_IFDIR: format_char = 'd'; break;
+        case S_IFIFO: format_char = 'p'; break;
+        case S_IFLNK: format_char = 'l'; break;
+        default:      format_char = '-'; break;
+    }
+
+    snprintf(owner_str, 4, "%c%c%c",
+             mode & S_IRUSR ? 'r':'-',
+             mode & S_IWUSR ? 'w':'-',
+             mode & S_IXUSR ? 'x':'-');
+
+    snprintf(group_str, 4, "%c%c%c",
+             mode & S_IRGRP ? 'r':'-',
+             mode & S_IWGRP ? 'w':'-',
+             mode & S_IXGRP ? 'x':'-');
+
+    snprintf(other_str, 4, "%c%c%c",
+             mode & S_IROTH ? 'r':'-',
+             mode & S_IWOTH ? 'w':'-',
+             mode & S_IXOTH ? 'x':'-');
+
+    snprintf(str, str_max, "%c%s%s%s", format_char, owner_str, group_str, other_str);
+}
+
 void list_file_short(const char *dir_name, const char *name) {
     puts(name);
 }
 
 void list_file_long(const char *dir_name, const char *name) {
-    size_t path_size = strlen(dir_name) + strlen(name) + 2;
-    char path[path_size];
+    size_t path_str_max = strlen(dir_name) + strlen(name) + 2;
+    char path_str[path_str_max];
+
+    size_t mode_str_max = 11;
+    char mode_str[mode_str_max];
 
     struct stat sb;
     struct passwd *pb;
     struct group *gb;
 
-    int time_str_max = 13;
+    size_t time_str_max = 13;
     char time_str[time_str_max];
 
-    snprintf(path, path_size, "%s/%s", dir_name, name);
+    snprintf(path_str, path_str_max, "%s/%s", dir_name, name);
 
-    if (stat(path, &sb) == -1) {
+    if (stat(path_str, &sb) == -1) {
         err("stat"); return;
     }
 
@@ -56,10 +92,11 @@ void list_file_long(const char *dir_name, const char *name) {
         err("getgrgid"); return;
     }
 
+    get_mode(mode_str, mode_str_max, sb.st_mode);
     strftime(time_str, time_str_max, "%b %e %H:%M", localtime(&sb.st_mtime));
 
-    printf("%lo %u %s %s %4u %s %s\n",
-           (unsigned long)sb.st_mode,
+    printf("%s %u %s %s %5u %s %s\n",
+           mode_str,
            (unsigned int)sb.st_nlink,
            pb->pw_name,
            gb->gr_name,
