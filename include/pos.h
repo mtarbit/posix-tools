@@ -7,5 +7,6 @@
 
 void err(const char *err_func);
 void die(const char *err_func);
+void die_msg(const char *format, ...);
 
 #endif /* _POS_H */

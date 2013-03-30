@@ -1,5 +1,6 @@
 #include "pos.h"
 #include <string.h>
+#include <stdarg.h>
 
 void err(const char *err_func) {
     char *err_msg = "Error - Calling ";
@@ -15,9 +16,18 @@ void err(const char *err_func) {
     }
 }
 
-
 void die(const char *err_func) {
     err(err_func);
+    exit(EXIT_FAILURE);
+}
+
+void die_msg(const char *format, ...) {
+    va_list ap;
+
+    va_start(ap, format);
+    vfprintf(stderr, format, ap);
+    va_end(ap);
+
     exit(EXIT_FAILURE);
 }
 
