@@ -4,27 +4,23 @@
 #include <ctype.h>
 #include <getopt.h>
 
-// For -m flag see discussion of multi-byte / wide-char handling here:
-// http://stackoverflow.com/questions/14083706/iterating-through-a-char-array-with-non-standard-chars/14083757#14083757
+struct counts { int l, w, m, c; };
 
-int l_option = 0,
-    w_option = 0,
-    m_option = 0,
-    c_option = 0;
+struct counts options = {0, 0, 0, 0};
 
 void usage(const char *program_name) {
     die_msg("Usage: %s [-lwmc]... [FILE]...", program_name);
 }
 
-void print_counts(int l, int w, int m, int c, const char *label) {
-    if (l_option || w_option || m_option || c_option) {
-        if (l_option) printf("%d ", l);
-        if (w_option) printf("%d ", w);
-        if (m_option) printf("%d ", m);
-        if (c_option) printf("%d ", c);
+void print_counts(struct counts *counts, const char *label) {
+    if (options.l || options.w || options.m || options.c) {
+        if (options.l) printf("%d ", counts->l);
+        if (options.w) printf("%d ", counts->w);
+        if (options.m) printf("%d ", counts->m);
+        if (options.c) printf("%d ", counts->c);
         puts(label);
     } else {
-        printf("%d %d %d %s\n", l, w, c, label);
+        printf("%d %d %d %s\n", counts->l, counts->w, counts->c, label);
     }
 }
 
@@ -33,15 +29,8 @@ int main(int argc, char *argv[]) {
     int len;
     int opt;
 
-    int l_count,
-        w_count,
-        m_count,
-        c_count;
-
-    int l_total = 0,
-        w_total = 0,
-        m_total = 0,
-        c_total = 0;
+    struct counts counts;
+    struct counts totals = {0, 0, 0, 0};
 
     int filec;
     char **filev;
@@ -53,10 +42,10 @@ int main(int argc, char *argv[]) {
 
     while ((opt = getopt(argc, argv, "lwmc")) != -1) {
         switch (opt) {
-            case 'l': l_option = 1; break;
-            case 'w': w_option = 1; break;
-            case 'm': m_option = 1; break;
-            case 'c': c_option = 1; break;
+            case 'l': options.l = 1; break;
+            case 'w': options.w = 1; break;
+            case 'm': options.m = 1; break;
+            case 'c': options.c = 1; break;
             default:  usage(argv[0]);
         }
     }
@@ -71,40 +60,40 @@ int main(int argc, char *argv[]) {
             die("fopen");
         }
 
-        l_count = 0;
-        w_count = 0;
-        m_count = 0;
-        c_count = 0;
+        counts.l = 0;
+        counts.w = 0;
+        counts.m = 0;
+        counts.c = 0;
 
         while (fgets(buf, LINE_MAX, fp) != NULL) {
             for (j = 0; buf[j] && (len = mblen(&buf[j], LINE_MAX - j)) > 0; j += len) {
-                c_count += len;
-                m_count++;
+                counts.c += len;
+                counts.m++;
 
                 curr_chr = buf[j];
 
                 if (curr_chr == '\n') {
-                    l_count++;
+                    counts.l++;
                 }
 
                 if (!isspace(curr_chr) && (!last_chr || isspace(last_chr))) {
-                    w_count++;
+                    counts.w++;
                 }
 
                 last_chr = curr_chr;
             }
         }
 
-        l_total += l_count;
-        w_total += w_count;
-        m_total += m_count;
-        c_total += c_count;
+        totals.l += counts.l;
+        totals.w += counts.w;
+        totals.m += counts.m;
+        totals.c += counts.c;
 
-        print_counts(l_count, w_count, m_count, c_count, filev[i]);
+        print_counts(&counts, filev[i]);
     }
 
     if (filec > 1) {
-        print_counts(l_total, w_total, m_total, c_total, "total");
+        print_counts(&totals, "total");
     }
 
     exit(EXIT_SUCCESS);
