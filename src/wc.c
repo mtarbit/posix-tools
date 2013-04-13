@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
         print_counts(l_count, w_count, m_count, c_count, filev[i]);
     }
 
-    if (filec > 2) {
+    if (filec > 1) {
         print_counts(l_total, w_total, m_total, c_total, "total");
     }
 
