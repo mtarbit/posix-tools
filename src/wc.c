@@ -10,7 +10,7 @@ struct counts { int l, w, m, c; };
 struct counts options = {0, 0, 0, 0};
 
 void usage(const char *program_name) {
-    die_msg("Usage: %s [-lwmc]... [FILE]...", program_name);
+    die_msg("Usage: %s [-lwmc]... [FILE]...\n", program_name);
 }
 
 void print_counts(struct counts *widths, struct counts *counts, const char *label) {
