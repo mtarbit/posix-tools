@@ -1,4 +1,4 @@
-CFLAGS = -Wall -Iinclude -lm
+CFLAGS = -Wall -Iinclude
 ARFLAGS = cr
 VPATH = src
 
@@ -8,8 +8,11 @@ archive = libpos.a
 .PHONY: all clean
 
 all: $(targets)
+
 $(targets): $(archive)
 $(archive): $(archive)(lib_pos_err.o)
+
+wc: -lm
 
 clean:
 	-rm $(archive) $(targets)
