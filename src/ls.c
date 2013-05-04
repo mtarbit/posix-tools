@@ -258,7 +258,7 @@ int main(int argc, char *argv[]) {
     }
 
     filec = argc - optind;
-    filev = &argv[optind];
+    filev = argv + optind;
 
     if (filec <= 0) {
         filec = 1; *filev = ".";

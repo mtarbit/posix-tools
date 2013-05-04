@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     }
 
     filec = argc - optind;
-    filev = &argv[optind];
+    filev = argv + optind;
 
     setlocale(LC_ALL, "");
 
