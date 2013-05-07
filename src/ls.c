@@ -3,7 +3,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <getopt.h>
-#include <dirent.h>
 #include <string.h>
 #include <strings.h>
 #include <pwd.h>
@@ -62,18 +61,6 @@ int A_option = 0,
     a_option = 0,
     f_option = 0,
     l_option = 0;
-
-int list_skip_hidden(const struct dirent *ent) {
-    return *ent->d_name != '.';
-}
-
-int list_skip_special(const struct dirent *ent) {
-    return strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0;
-}
-
-int list_sort_alpha(const struct dirent **e1, const struct dirent **e2) {
-    return -1 * strcasecmp((*e1)->d_name, (*e2)->d_name);
-}
 
 void usage(const char *program_name) {
     fprintf(stderr, "Usage: %s [-ALafl]... [FILE]...\n", program_name);
@@ -240,15 +227,15 @@ int main(int argc, char *argv[]) {
     if (a_option) {
         list_skip = 0;
     } else if (A_option) {
-        list_skip = *list_skip_special;
+        list_skip = *scan_skip_special;
     } else {
-        list_skip = *list_skip_hidden;
+        list_skip = *scan_skip_hidden;
     }
 
     if (f_option) {
         list_sort = 0;
     } else {
-        list_sort = *list_sort_alpha;
+        list_sort = *scan_sort_alpha;
     }
 
     if (l_option) {
