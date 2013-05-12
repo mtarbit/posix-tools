@@ -5,12 +5,14 @@
 #include <getopt.h>
 #include <math.h>
 
+const char *program_name;
+
 struct counts { int l, w, m, c; };
 
 struct counts options = {0, 0, 0, 0};
 
-void usage(const char *program_name) {
-    die_msg("Usage: %s [-lwmc]... [FILE]...\n", program_name);
+void usage() {
+    msg_usage("[-lwmc]... [file]...");
 }
 
 void print_counts(struct counts *widths, struct counts *counts, const char *label) {
@@ -38,13 +40,15 @@ int main(int argc, char *argv[]) {
     char curr_chr;
     char last_chr;
 
+    program_name = argv[0];
+
     while ((opt = getopt(argc, argv, "lwmc")) != -1) {
         switch (opt) {
             case 'l': options.l = 1; break;
             case 'w': options.w = 1; break;
             case 'm': options.m = 1; break;
             case 'c': options.c = 1; break;
-            default:  usage(argv[0]);
+            default:  usage();
         }
     }
 
@@ -63,7 +67,7 @@ int main(int argc, char *argv[]) {
 
     for (i = 0; i < filec; i++) {
         if ((fp = fopen(filev[i], "r")) == NULL) {
-            die("fopen");
+            die_fn("fopen");
         }
 
         counts[i].l = 0;

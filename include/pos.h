@@ -6,14 +6,20 @@
 #include <stdio.h>
 #include <errno.h>
 
+void err(const char *fmt, ...);
+void err_fn(const char *fn_name);
+void msg_err(const char *fmt, ...);
+
+void die(const char *fmt, ...);
+void die_fn(const char *fn_name);
+void msg_die(const char *fmt, ...);
+
+void msg_usage(const char *fmt, ...);
+void msg_prompt(const char *fmt, ...);
+char msg_confirm(const char *fmt, ...);
+
 int scan_skip_hidden(const struct dirent *ent);
 int scan_skip_special(const struct dirent *ent);
 int scan_sort_alpha(const struct dirent **e1, const struct dirent **e2);
-
-char confirm();
-
-void err(const char *err_func);
-void die(const char *err_func);
-void die_msg(const char *format, ...);
 
 #endif /* _POS_H */

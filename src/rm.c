@@ -5,25 +5,23 @@
 #include <unistd.h>
 #include <string.h>
 
+const char *program_name;
+
 void remove_dir(const char *dir);
 
 int f_option = 0,
     i_option = 0,
     r_option = 0;
 
-char *program_name;
-
 void usage() {
-    die_msg("%s [-fiRr] file...\n", program_name);
+    msg_usage("[-fiRr] file...");
 }
 
 char *join_path(const char *a, const char *b) {
-    size_t la = strlen(a);
-    size_t lb = strlen(b);
-    size_t path_l = la + lb + 2;
-    char *path = malloc(path_l);
+    size_t path_len = strlen(a) + strlen(b) + 2;
+    char *path = malloc(path_len);
 
-    snprintf(path, path_l, "%s/%s", a, b);
+    snprintf(path, path_len, "%s/%s", a, b);
 
     return path;
 }
@@ -54,7 +52,7 @@ void remove_file(const char *file) {
 
     if (lstat(file, &statbuf) == -1) {
         if (!f_option) {
-            fprintf(stderr, "%s: cannot remove '%s': %s", program_name, file, strerror(errno));
+            err("cannot remove '%s'", file);
         }
         return;
     }
@@ -62,13 +60,12 @@ void remove_file(const char *file) {
     if (S_ISDIR(statbuf.st_mode)) {
 
         if (!r_option) {
-            fprintf(stderr, "%s: cannot remove '%s': Is a directory\n", program_name, file);
+            msg_err("cannot remove '%s': Is a directory", file);
             return;
         }
 
         if (!f_option && ((file_not_writable(file) && input_is_terminal()) || i_option)) {
-            fprintf(stderr, "%s: descend into directory '%s'? ", program_name, file);
-            if (confirm() != 'y') {
+            if (msg_confirm("descend into directory '%s'?", file) != 'y') {
                 return;
             }
         }
@@ -76,27 +73,25 @@ void remove_file(const char *file) {
         remove_dir(file);
 
         if (i_option) {
-            fprintf(stderr, "%s: remove directory '%s'? ", program_name, file);
-            if (confirm() != 'y') {
+            if (msg_confirm("remove directory '%s'?", file) != 'y') {
                 return;
             }
         }
 
         if (rmdir(file) == -1) {
-            err("unlink");
+            err_fn("unlink");
         }
 
     } else {
 
         if (!f_option && ((file_not_writable(file) && input_is_terminal()) || i_option)) {
-            fprintf(stderr, "%s: remove %s '%s'? ", program_name, file_description(&statbuf), file);
-            if (confirm() != 'y') {
+            if (msg_confirm("remove %s '%s'?", file_description(&statbuf), file) != 'y') {
                 return;
             }
         }
 
         if (unlink(file) == -1) {
-            err("unlink");
+            err_fn("unlink");
         }
 
     }
@@ -108,7 +103,7 @@ void remove_dir(const char *dir) {
     char *path;
 
     if ((n = scandir(dir, &ents, scan_skip_special, scan_sort_alpha)) == -1) {
-        err("scandir");
+        err_fn("scandir");
     } else {
         while (n--) {
             path = join_path(dir, ents[n]->d_name);

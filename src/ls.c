@@ -56,15 +56,16 @@ Miscellaneous
   -R Recursively list subdirectories encountered. When a symbolic link to a directory is encountered, the directory shall not be recursively listed unless the -L option is specified.
 */
 
+const char *program_name;
+
 int A_option = 0,
     L_option = 0,
     a_option = 0,
     f_option = 0,
     l_option = 0;
 
-void usage(const char *program_name) {
-    fprintf(stderr, "Usage: %s [-ALafl]... [FILE]...\n", program_name);
-    exit(EXIT_FAILURE);
+void usage() {
+    msg_usage("[-ALafl]... [file]...");
 }
 
 void get_mode_str(char *str, size_t str_max, mode_t mode) {
@@ -147,9 +148,9 @@ void list_file_long(const char *dir_name, const char *name) {
     snprintf(path_str, path_str_max, "%s/%s", dir_name, name);
 
     if (L_option) {
-        if (stat(path_str, &sb) == -1) { err("stat"); return; }
+        if (stat(path_str, &sb) == -1) { err_fn("stat"); return; }
     } else {
-        if (lstat(path_str, &sb) == -1) { err("lstat"); return; }
+        if (lstat(path_str, &sb) == -1) { err_fn("lstat"); return; }
     }
 
     if (L_option || !S_ISLNK(sb.st_mode)) {
@@ -160,11 +161,11 @@ void list_file_long(const char *dir_name, const char *name) {
     }
 
     if ((pb = getpwuid(sb.st_uid)) == NULL) {
-        err("getpwuid"); return;
+        err_fn("getpwuid"); return;
     }
 
     if ((gb = getgrgid(sb.st_gid)) == NULL) {
-        err("getgrgid"); return;
+        err_fn("getgrgid"); return;
     }
 
     get_mode_str(mode_str, mode_str_max, sb.st_mode);
@@ -191,7 +192,7 @@ void list_dir(const char *dir_name,
     struct dirent **ents;
 
     if ((n = scandir(dir_name, &ents, skip, sort)) == -1) {
-        err("scandir");
+        err_fn("scandir");
     } else {
         while (n--) {
             list(dir_name, ents[n]->d_name);
@@ -213,6 +214,8 @@ int main(int argc, char *argv[]) {
     char **filev;
     struct stat statbuf;
 
+    program_name = argv[0];
+
     while ((opt = getopt(argc, argv, "ALafl")) != -1) {
         switch (opt) {
             case 'A': A_option = 1; break;
@@ -220,7 +223,7 @@ int main(int argc, char *argv[]) {
             case 'a': a_option = 1; break;
             case 'f': f_option = 1; break;
             case 'l': l_option = 1; break;
-            default:  usage(argv[0]);
+            default:  usage();
         }
     }
 
@@ -253,7 +256,7 @@ int main(int argc, char *argv[]) {
 
     for (i = 0; i < filec; i++) {
         if (stat(filev[i], &statbuf) == -1) {
-            err("stat"); continue;
+            err_fn("stat"); continue;
         }
 
         if (statbuf.st_mode & S_IFDIR) {

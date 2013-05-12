@@ -17,11 +17,11 @@ int main(int argc, char *argv[]) {
 
     for (buf = ptr = NULL; ptr == NULL; buf_size *= 2) {
         if ((buf = realloc(buf, buf_size)) == NULL) {
-            die("realloc");
+            die_fn("realloc");
         }
 
         if ((ptr = getcwd(buf, buf_size)) == NULL && errno != ERANGE) {
-            die("getcwd");
+            die_fn("getcwd");
         }
     }
 

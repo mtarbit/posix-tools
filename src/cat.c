@@ -2,6 +2,8 @@
 #include <string.h>
 #include <limits.h>
 
+const char *program_name;
+
 void putf(FILE *stream) {
     char buf[LINE_MAX];
 
@@ -13,6 +15,8 @@ void putf(FILE *stream) {
 int main(int argc, char *argv[]) {
     int i;
     FILE *fp;
+
+    program_name = argv[0];
 
     if (argc == 1) {
 
@@ -28,13 +32,13 @@ int main(int argc, char *argv[]) {
             } else {
 
                 if ((fp = fopen(argv[i], "r")) == NULL) {
-                    die("fopen");
+                    die_fn("fopen");
                 }
 
                 putf(fp);
 
                 if (fclose(fp) != 0) {
-                    die("fclose");
+                    die_fn("fclose");
                 }
 
             }

@@ -19,13 +19,13 @@ int main(int argc, char *argv[]) {
     }
 
     if (i_option && clearenv() != 0) {
-        die("clearenv");
+        die_fn("clearenv");
     }
 
     for (i = 0; i < argc; i++) {
         if (strchr(argv[i], '=')) {
             if (putenv(argv[i]) != 0) {
-                die("putenv");
+                die_fn("putenv");
             }
         } else {
             command = &argv[i];
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
     if (command) {
         if (execvp(*command, command) == -1) {
-            die("execvp");
+            die_fn("execvp");
         }
     }
 

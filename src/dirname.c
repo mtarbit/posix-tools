@@ -1,13 +1,17 @@
 #include "pos.h"
 #include <libgen.h>
 
-void usage(const char *program_name) {
-    die_msg("Usage: %s NAME\n", program_name);
+const char *program_name;
+
+void usage() {
+    msg_usage("name");
 }
 
 int main(int argc, char *argv[]) {
+    program_name = argv[0];
+
     if (argc != 2) {
-        usage(argv[0]);
+        usage();
     }
 
     puts(dirname(argv[1]));
