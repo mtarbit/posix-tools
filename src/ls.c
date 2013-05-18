@@ -185,8 +185,8 @@ void list_file_long(const char *dir_name, const char *name) {
 }
 
 void list_dir(const char *dir_name,
-              int (*skip)(const struct dirent *),
-              int (*sort)(const struct dirent **, const struct dirent **),
+              int (*skip)(struct dirent *),
+              int (*sort)(const void *, const void *),
               void (*list)(const char *, const char *)) {
     int n;
     struct dirent **ents;
@@ -205,8 +205,8 @@ void list_dir(const char *dir_name,
 int main(int argc, char *argv[]) {
     int opt;
 
-    int (*list_skip)(const struct dirent *);
-    int (*list_sort)(const struct dirent **, const struct dirent **);
+    int (*list_skip)(struct dirent *);
+    int (*list_sort)(const void *, const void *);
     void (*list_file)(const char *, const char *);
 
     int i;

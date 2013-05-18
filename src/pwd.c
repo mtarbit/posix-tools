@@ -1,12 +1,16 @@
 #include "pos.h"
 #include <unistd.h>
 
+const char *program_name;
+
 int main(int argc, char *argv[]) {
     long path_max;
     size_t buf_size;
 
     char *buf;
     char *ptr;
+
+    program_name = argv[0];
 
     path_max = pathconf(".", _PC_PATH_MAX);
     if (path_max == -1) {

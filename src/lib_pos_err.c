@@ -96,14 +96,14 @@ char msg_confirm(const char *fmt, ...) {
     }
 }
 
-int scan_skip_hidden(const struct dirent *ent) {
+int scan_skip_hidden(struct dirent *ent) {
     return *ent->d_name != '.';
 }
 
-int scan_skip_special(const struct dirent *ent) {
+int scan_skip_special(struct dirent *ent) {
     return strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0;
 }
 
-int scan_sort_alpha(const struct dirent **e1, const struct dirent **e2) {
-    return -1 * strcasecmp((*e1)->d_name, (*e2)->d_name);
+int scan_sort_alpha(const void *e1, const void *e2) {
+    return -1 * strcasecmp((*(struct dirent **)e1)->d_name, (*(struct dirent **)e2)->d_name);
 }

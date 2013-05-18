@@ -2,12 +2,16 @@
 #include <unistd.h>
 #include <string.h>
 
+const char *program_name;
+
 int main(int argc, char *argv[]) {
     extern char **environ;
     char **command = NULL;
 
     int i;
     int i_option;
+
+    program_name = argv[0];
 
     --argc; ++argv;
 
@@ -18,8 +22,8 @@ int main(int argc, char *argv[]) {
         i_option = 0;
     }
 
-    if (i_option && clearenv() != 0) {
-        die_fn("clearenv");
+    if (i_option) {
+        environ = NULL;
     }
 
     for (i = 0; i < argc; i++) {

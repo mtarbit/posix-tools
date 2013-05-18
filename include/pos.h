@@ -18,8 +18,8 @@ void msg_usage(const char *fmt, ...);
 void msg_prompt(const char *fmt, ...);
 char msg_confirm(const char *fmt, ...);
 
-int scan_skip_hidden(const struct dirent *ent);
-int scan_skip_special(const struct dirent *ent);
-int scan_sort_alpha(const struct dirent **e1, const struct dirent **e2);
+int scan_skip_hidden(struct dirent *ent);
+int scan_skip_special(struct dirent *ent);
+int scan_sort_alpha(const void *e1, const void *e2);
 
 #endif /* _POS_H */
