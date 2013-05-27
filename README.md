@@ -2,15 +2,13 @@ POSIX Tools
 ===========
 
 This is a probably misguided attempt to re-create a few of the simpler
-standard shell tools or utilities from scratch. Mainly as a practice exercise
-of C and *nix programming.
-
-I'm aiming for compliance with the shell & utilities section of
-[POSIX.1-2008](http://pubs.opengroup.org/onlinepubs/9699919799/).
+standard shell tools and utilities from scratch, mainly as a practice exercise
+in C and *nix programming. I'm aiming for compliance with the shell & utilities
+section of [POSIX.1-2008](http://pubs.opengroup.org/onlinepubs/9699919799/).
 
 If it's not immediately obvious I don't really know what I'm doing, so
-don't go using these yourself unless you want your machine to go up in
-a puff of blue smoke.
+don't go relying on these unless you want your machine to go up in a puff
+of blue smoke.
 
 ### Complete implementations
 
@@ -27,8 +25,8 @@ a puff of blue smoke.
 
 ### Partial implementations
 
- * [cal](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/cal.html) - only handles Gregorian calendar dates correctly (14th Sep 1752 onwards)
- * [ls](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/ls.html)- does basic listings, but lots of formatting and options still to be done
+ * [cal](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/cal.html) - Only handles Gregorian calendar dates correctly (14th Sep 1752 onwards)
+ * [ls](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/ls.html) - Does basic listings, but most of the formatting and options are still to be done
 
 ### Prior art
 
