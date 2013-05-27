@@ -12,7 +12,7 @@ struct counts { int l, w, m, c; };
 struct counts options = {0, 0, 0, 0};
 
 void usage() {
-    msg_usage("[-lwmc]... [file]...");
+    pt_msg_usage("[-lwmc]... [file]...");
 }
 
 void print_counts(struct counts *widths, struct counts *counts, const char *label) {
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
 
     for (i = 0; i < filec; i++) {
         if ((fp = fopen(filev[i], "r")) == NULL) {
-            die_fn("fopen");
+            pt_die_fn("fopen");
         }
 
         counts[i].l = 0;

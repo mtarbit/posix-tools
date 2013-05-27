@@ -4,13 +4,13 @@
 const char *program_name;
 
 void usage() {
-    msg_usage("[[month] year]");
+    pt_msg_usage("[[month] year]");
 }
 
 int get_arg_month(const char *str) {
     int m = atoi(str);
     if (m < 1 || m > 12) {
-        msg_die("%s is not a valid month in the range 1 to 12", str);
+        pt_msg_die("%s is not a valid month in the range 1 to 12", str);
     }
     return m;
 }
@@ -18,7 +18,7 @@ int get_arg_month(const char *str) {
 int get_arg_year(const char *str) {
     int y = atoi(str);
     if (y < 1 || y > 9999) {
-        msg_die("%s is not a valid year in the range 1 to 9999", str);
+        pt_msg_die("%s is not a valid year in the range 1 to 9999", str);
     }
     return y;
 }

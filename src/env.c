@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     for (i = 0; i < argc; i++) {
         if (strchr(argv[i], '=')) {
             if (putenv(argv[i]) != 0) {
-                die_fn("putenv");
+                pt_die_fn("putenv");
             }
         } else {
             command = &argv[i];
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 
     if (command) {
         if (execvp(*command, command) == -1) {
-            die_fn("execvp");
+            pt_die_fn("execvp");
         }
     }
 

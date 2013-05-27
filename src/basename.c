@@ -5,7 +5,7 @@
 const char *program_name;
 
 void usage() {
-    msg_usage("name [suffix]");
+    pt_msg_usage("name [suffix]");
 }
 
 char * strip_suffix(char *name, const char *suff) {

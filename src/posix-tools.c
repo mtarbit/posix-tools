@@ -6,7 +6,7 @@
 
 extern const char *program_name;
 
-void err(const char *fmt, ...) {
+void pt_err(const char *fmt, ...) {
     va_list ap;
     char buf[LINE_MAX];
 
@@ -16,11 +16,11 @@ void err(const char *fmt, ...) {
     va_end(ap);
 }
 
-void err_fn(const char *fn_name) {
-    err("calling %s", fn_name);
+void pt_err_fn(const char *fn_name) {
+    pt_err("calling %s", fn_name);
 }
 
-void msg_err(const char *fmt, ...) {
+void pt_msg_err(const char *fmt, ...) {
     va_list ap;
     char buf[LINE_MAX];
 
@@ -30,32 +30,32 @@ void msg_err(const char *fmt, ...) {
     va_end(ap);
 }
 
-void die(const char *fmt, ...) {
+void pt_die(const char *fmt, ...) {
     va_list ap;
 
     va_start(ap, fmt);
-    err(fmt, ap);
+    pt_err(fmt, ap);
     va_end(ap);
 
     exit(EXIT_FAILURE);
 }
 
-void die_fn(const char *fn_name) {
-    err_fn(fn_name);
+void pt_die_fn(const char *fn_name) {
+    pt_err_fn(fn_name);
     exit(EXIT_FAILURE);
 }
 
-void msg_die(const char *fmt, ...) {
+void pt_msg_die(const char *fmt, ...) {
     va_list ap;
 
     va_start(ap, fmt);
-    msg_err(fmt, ap);
+    pt_msg_err(fmt, ap);
     va_end(ap);
 
     exit(EXIT_FAILURE);
 }
 
-void msg_usage(const char *fmt, ...) {
+void pt_msg_usage(const char *fmt, ...) {
     va_list ap;
     char buf[LINE_MAX];
 
@@ -67,7 +67,7 @@ void msg_usage(const char *fmt, ...) {
     exit(EXIT_FAILURE);
 }
 
-void msg_prompt(const char *fmt, ...) {
+void pt_msg_prompt(const char *fmt, ...) {
     va_list ap;
     char buf[LINE_MAX];
 
@@ -77,7 +77,7 @@ void msg_prompt(const char *fmt, ...) {
     va_end(ap);
 }
 
-char msg_confirm(const char *fmt, ...) {
+char pt_msg_confirm(const char *fmt, ...) {
     va_list ap;
     char buf[LINE_MAX];
 
@@ -87,7 +87,7 @@ char msg_confirm(const char *fmt, ...) {
     va_end(ap);
 
     if (fgets(buf, LINE_MAX, stdin) == NULL) {
-        die_fn("fgets");
+        pt_die_fn("fgets");
     }
 
     if (strncasecmp(buf, "y", 1) == 0) {
@@ -97,15 +97,15 @@ char msg_confirm(const char *fmt, ...) {
     }
 }
 
-int scan_skip_hidden(const struct dirent *ent) {
+int pt_scan_skip_hidden(const struct dirent *ent) {
     return *ent->d_name != '.';
 }
 
-int scan_skip_special(const struct dirent *ent) {
+int pt_scan_skip_special(const struct dirent *ent) {
     return strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0;
 }
 
-int scan_sort_alpha(const struct dirent **e1, const struct dirent **e2) {
+int pt_scan_sort_alpha(const struct dirent **e1, const struct dirent **e2) {
     return -1 * strcasecmp((*e1)->d_name, (*e2)->d_name);
 }
 

@@ -14,7 +14,7 @@ int f_option = 0,
     r_option = 0;
 
 void usage() {
-    msg_usage("[-fiRr] file...");
+    pt_msg_usage("[-fiRr] file...");
 }
 
 char *join_path(const char *a, const char *b) {
@@ -52,7 +52,7 @@ void remove_file(const char *file) {
 
     if (lstat(file, &statbuf) == -1) {
         if (!f_option) {
-            err("cannot remove '%s'", file);
+            pt_err("cannot remove '%s'", file);
         }
         return;
     }
@@ -60,12 +60,12 @@ void remove_file(const char *file) {
     if (S_ISDIR(statbuf.st_mode)) {
 
         if (!r_option) {
-            msg_err("cannot remove '%s': Is a directory", file);
+            pt_msg_err("cannot remove '%s': Is a directory", file);
             return;
         }
 
         if (!f_option && ((file_not_writable(file) && input_is_terminal()) || i_option)) {
-            if (msg_confirm("descend into directory '%s'?", file) != 'y') {
+            if (pt_msg_confirm("descend into directory '%s'?", file) != 'y') {
                 return;
             }
         }
@@ -73,25 +73,25 @@ void remove_file(const char *file) {
         remove_dir(file);
 
         if (i_option) {
-            if (msg_confirm("remove directory '%s'?", file) != 'y') {
+            if (pt_msg_confirm("remove directory '%s'?", file) != 'y') {
                 return;
             }
         }
 
         if (rmdir(file) == -1) {
-            err_fn("unlink");
+            pt_err_fn("unlink");
         }
 
     } else {
 
         if (!f_option && ((file_not_writable(file) && input_is_terminal()) || i_option)) {
-            if (msg_confirm("remove %s '%s'?", file_description(&statbuf), file) != 'y') {
+            if (pt_msg_confirm("remove %s '%s'?", file_description(&statbuf), file) != 'y') {
                 return;
             }
         }
 
         if (unlink(file) == -1) {
-            err_fn("unlink");
+            pt_err_fn("unlink");
         }
 
     }
@@ -102,8 +102,8 @@ void remove_dir(const char *dir) {
     struct dirent **ents;
     char *path;
 
-    if ((n = pt_scandir(dir, &ents, scan_skip_special, scan_sort_alpha)) == -1) {
-        err_fn("scandir");
+    if ((n = pt_scandir(dir, &ents, pt_scan_skip_special, pt_scan_sort_alpha)) == -1) {
+        pt_err_fn("scandir");
     } else {
         while (n--) {
             path = join_path(dir, ents[n]->d_name);

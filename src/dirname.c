@@ -4,7 +4,7 @@
 const char *program_name;
 
 void usage() {
-    msg_usage("name");
+    pt_msg_usage("name");
 }
 
 int main(int argc, char *argv[]) {

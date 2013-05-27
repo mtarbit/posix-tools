@@ -65,7 +65,7 @@ int A_option = 0,
     l_option = 0;
 
 void usage() {
-    msg_usage("[-ALafl]... [file]...");
+    pt_msg_usage("[-ALafl]... [file]...");
 }
 
 void get_mode_str(char *str, size_t str_max, mode_t mode) {
@@ -148,9 +148,9 @@ void list_file_long(const char *dir_name, const char *name) {
     snprintf(path_str, path_str_max, "%s/%s", dir_name, name);
 
     if (L_option) {
-        if (stat(path_str, &sb) == -1) { err_fn("stat"); return; }
+        if (stat(path_str, &sb) == -1) { pt_err_fn("stat"); return; }
     } else {
-        if (lstat(path_str, &sb) == -1) { err_fn("lstat"); return; }
+        if (lstat(path_str, &sb) == -1) { pt_err_fn("lstat"); return; }
     }
 
     if (L_option || !S_ISLNK(sb.st_mode)) {
@@ -161,11 +161,11 @@ void list_file_long(const char *dir_name, const char *name) {
     }
 
     if ((pb = getpwuid(sb.st_uid)) == NULL) {
-        err_fn("getpwuid"); return;
+        pt_err_fn("getpwuid"); return;
     }
 
     if ((gb = getgrgid(sb.st_gid)) == NULL) {
-        err_fn("getgrgid"); return;
+        pt_err_fn("getgrgid"); return;
     }
 
     get_mode_str(mode_str, mode_str_max, sb.st_mode);
@@ -192,7 +192,7 @@ void list_dir(const char *dir_name,
     struct dirent **ents;
 
     if ((n = pt_scandir(dir_name, &ents, skip, sort)) == -1) {
-        err_fn("scandir");
+        pt_err_fn("scandir");
     } else {
         while (n--) {
             list(dir_name, ents[n]->d_name);
@@ -230,15 +230,15 @@ int main(int argc, char *argv[]) {
     if (a_option) {
         list_skip = 0;
     } else if (A_option) {
-        list_skip = *scan_skip_special;
+        list_skip = *pt_scan_skip_special;
     } else {
-        list_skip = *scan_skip_hidden;
+        list_skip = *pt_scan_skip_hidden;
     }
 
     if (f_option) {
         list_sort = 0;
     } else {
-        list_sort = *scan_sort_alpha;
+        list_sort = *pt_scan_sort_alpha;
     }
 
     if (l_option) {
@@ -256,7 +256,7 @@ int main(int argc, char *argv[]) {
 
     for (i = 0; i < filec; i++) {
         if (stat(filev[i], &statbuf) == -1) {
-            err_fn("stat"); continue;
+            pt_err_fn("stat"); continue;
         }
 
         if (statbuf.st_mode & S_IFDIR) {

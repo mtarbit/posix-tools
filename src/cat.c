@@ -32,13 +32,13 @@ int main(int argc, char *argv[]) {
             } else {
 
                 if ((fp = fopen(argv[i], "r")) == NULL) {
-                    die_fn("fopen");
+                    pt_die_fn("fopen");
                 }
 
                 putf(fp);
 
                 if (fclose(fp) != 0) {
-                    die_fn("fclose");
+                    pt_die_fn("fclose");
                 }
 
             }
