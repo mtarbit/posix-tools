@@ -185,13 +185,13 @@ void list_file_long(const char *dir_name, const char *name) {
 }
 
 void list_dir(const char *dir_name,
-              int (*skip)(struct dirent *),
-              int (*sort)(const void *, const void *),
+              int (*skip)(const struct dirent *),
+              int (*sort)(const struct dirent **, const struct dirent **),
               void (*list)(const char *, const char *)) {
     int n;
     struct dirent **ents;
 
-    if ((n = scandir(dir_name, &ents, skip, sort)) == -1) {
+    if ((n = pt_scandir(dir_name, &ents, skip, sort)) == -1) {
         err_fn("scandir");
     } else {
         while (n--) {
@@ -205,8 +205,8 @@ void list_dir(const char *dir_name,
 int main(int argc, char *argv[]) {
     int opt;
 
-    int (*list_skip)(struct dirent *);
-    int (*list_sort)(const void *, const void *);
+    int (*list_skip)(const struct dirent *);
+    int (*list_sort)(const struct dirent **, const struct dirent **);
     void (*list_file)(const char *, const char *);
 
     int i;

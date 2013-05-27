@@ -102,7 +102,7 @@ void remove_dir(const char *dir) {
     struct dirent **ents;
     char *path;
 
-    if ((n = scandir(dir, &ents, scan_skip_special, scan_sort_alpha)) == -1) {
+    if ((n = pt_scandir(dir, &ents, scan_skip_special, scan_sort_alpha)) == -1) {
         err_fn("scandir");
     } else {
         while (n--) {
