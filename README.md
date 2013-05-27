@@ -2,18 +2,35 @@ POSIX Tools
 ===========
 
 This is a probably misguided attempt to re-create a few of the simpler
-standard shell tools or utilities from scratch. Mainly as a way to get
-a better understanding of C and *nix programming.
+standard shell tools or utilities from scratch. Mainly as a practice exercise
+of C and *nix programming.
 
-Ideally they'd be compliant with the shell & utilities section of
-[POSIX.1-2008](http://pubs.opengroup.org/onlinepubs/9699919799/)
-but we'll see how we go.
+I'm aiming for compliance with the shell & utilities section of
+[POSIX.1-2008](http://pubs.opengroup.org/onlinepubs/9699919799/).
 
 If it's not immediately obvious I don't really know what I'm doing, so
 don't go using these yourself unless you want your machine to go up in
 a puff of blue smoke.
 
-### Prior Art
+### Complete implementations
+
+ * [basename](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/basename.html)
+ * [cat](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/cat.html)
+ * [dirname](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/dirname.html)
+ * [echo](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/echo.html)
+ * [env](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/env.html)
+ * [false](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/false.html)
+ * [pwd](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/pwd.html)
+ * [rm](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/rm.html)
+ * [true](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/true.html)
+ * [wc](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/wc.html)
+
+### Partial implementations
+
+ * [cal](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/cal.html) - only handles Gregorian calendar dates correctly (14th Sep 1752 onwards)
+ * [ls](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/ls.html)- does basic listings, but lots of formatting and options still to be done
+
+### Prior art
 
 Some other implementations you might be familiar with:
 
