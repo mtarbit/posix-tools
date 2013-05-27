@@ -7,14 +7,14 @@ ifeq ($(shell uname), Darwin)
 endif
 
 targets = basename cal cat dirname echo env false ls pwd rm true wc
-archive = libpos.a
+archive = lib-posix-tools.a
 
 .PHONY: all clean
 
 all: $(targets)
 
 $(targets): $(archive)
-$(archive): $(archive)(lib_pos_err.o)
+$(archive): $(archive)(posix-tools.o)
 
 wc: -lm
 

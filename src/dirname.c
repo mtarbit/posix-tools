@@ -1,4 +1,4 @@
-#include "pos.h"
+#include "posix-tools.h"
 #include <libgen.h>
 
 const char *program_name;

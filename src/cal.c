@@ -1,4 +1,4 @@
-#include "pos.h"
+#include "posix-tools.h"
 #include <time.h>
 
 const char *program_name;

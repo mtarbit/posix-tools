@@ -1,4 +1,4 @@
-#include "pos.h"
+#include "posix-tools.h"
 #include <getopt.h>
 #include <sys/types.h>
 #include <sys/stat.h>
