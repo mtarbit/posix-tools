@@ -1,4 +1,4 @@
-CFLAGS = -Wall -Iinclude
+CFLAGS = -Wall -g -Iinclude
 ARFLAGS = cr
 VPATH = src
 

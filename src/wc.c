@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     FILE *fp;
     char buf[LINE_MAX];
     char curr_chr;
-    char last_chr;
+    char last_chr = ' ';
 
     program_name = argv[0];
 
@@ -86,12 +86,16 @@ int main(int argc, char *argv[]) {
                     counts[i].l++;
                 }
 
-                if (!isspace(curr_chr) && (!last_chr || isspace(last_chr))) {
+                if (!isspace(curr_chr) && isspace(last_chr)) {
                     counts[i].w++;
                 }
 
                 last_chr = curr_chr;
             }
+        }
+
+        if (fclose(fp) != 0) {
+            pt_die_fn("fclose");
         }
 
         totals.l += counts[i].l;
