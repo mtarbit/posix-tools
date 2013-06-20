@@ -6,7 +6,7 @@ ifeq ($(shell uname), Darwin)
 	.LIBPATTERNS = lib%.dylib lib%.so lib%.a
 endif
 
-targets = basename cal cat dirname echo env false ls pwd rm true wc
+targets = basename cal cat dirname echo env false ls pwd rm tail true wc
 archive = lib-posix-tools.a
 
 .PHONY: all clean
