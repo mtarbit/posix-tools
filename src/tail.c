@@ -7,7 +7,7 @@
 
 const char * program_name;
 
-struct Options { long c, n; char f; } options;
+struct { long c, n; char f; } options;
 
 void usage() {
     pt_msg_usage("[-f] [-c number|-n number] [file]");
@@ -17,9 +17,9 @@ long file_offset(const char *str) {
     long n;
 
     switch (*str) {
-        case '+': n = atoll(str) - 1; break;
-        case '-': n = atoll(str); break;
-        default:  n = -atoll(str); break;
+        case '+': n = atol(str) - 1; break;
+        case '-': n = atol(str); break;
+        default:  n = -atol(str); break;
     }
 
     return n;
