@@ -7,14 +7,14 @@
 
 const char * program_name;
 
-struct Options { long long c, n; char f; } options;
+struct Options { long c, n; char f; } options;
 
 void usage() {
     pt_msg_usage("[-f] [-c number|-n number] [file]");
 }
 
-long long file_offset(const char *str) {
-    long long n;
+long file_offset(const char *str) {
+    long n;
 
     switch (*str) {
         case '+': n = atoll(str) - 1; break;
@@ -25,10 +25,74 @@ long long file_offset(const char *str) {
     return n;
 }
 
+void seek_in_bytes(FILE *fp, long n) {
+    if (fseek(fp, n, (n < 0) ? SEEK_END : SEEK_SET) != 0) {
+        pt_die_fn("fseek");
+    }
+}
+
+void seek_in_lines_backward(FILE *fp, long n) {
+    char buf[LINE_MAX];
+
+    long last_pos;
+    long this_pos;
+
+    long tot_lines;
+    long dif_lines;
+
+    n = labs(n);
+
+    if (fseek(fp, -1, SEEK_END) != 0) {
+        pt_die_fn("fseek");
+    }
+
+    while (tot_lines < n) {
+        last_pos = ftell(fp);
+        this_pos = last_pos - (LINE_MAX * 10);
+
+        if (this_pos < 0) this_pos = 0;
+
+        if (fseek(fp, this_pos, SEEK_SET) != 0) {
+            pt_die_fn("fseek");
+        }
+
+        while (fgets(buf, LINE_MAX, fp)) {
+            ++tot_lines;
+        }
+    }
+
+    if (fseek(fp, this_pos, SEEK_SET) != 0) {
+        pt_die_fn("fseek");
+    }
+
+    dif_lines = tot_lines - n;
+    while (dif_lines-- > 0) {
+        fgets(buf, LINE_MAX, fp);
+    }
+}
+
+void seek_in_lines_forward(FILE *fp, long n) {
+    char buf[LINE_MAX];
+    long lines;
+
+    for (lines = 0; lines < n; lines++) {
+        if (fgets(buf, LINE_MAX, fp) == NULL) break;
+    }
+}
+
+void seek_in_lines(FILE *fp, long n) {
+    if (n < 0) {
+        seek_in_lines_backward(fp, n);
+    } else {
+        seek_in_lines_forward(fp, n);
+    }
+}
+
 void tail(FILE *fp) {
     char buf[LINE_MAX];
 
-    fseek(fp, options.c, (options.c < 0) ? SEEK_END : SEEK_SET);
+    if (options.c) seek_in_bytes(fp, options.c);
+    if (options.n) seek_in_lines(fp, options.n);
 
     while (fgets(buf, LINE_MAX, fp)) {
         fputs(buf, stdout);
@@ -52,6 +116,10 @@ int main(int argc, char *argv[]) {
             case 'n': options.n = file_offset(optarg); break;
             default:  usage(); break;
         }
+    }
+
+    if (options.c && options.n) {
+        usage();
     }
 
     if (!options.c && !options.n) {

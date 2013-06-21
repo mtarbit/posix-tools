@@ -27,7 +27,7 @@ of blue smoke.
 
  * [cal](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/cal.html) - Only handles Gregorian calendar dates correctly (14th Sep 1752 onwards)
  * [ls](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/ls.html) - Does basic listings, but most of the formatting and options are still to be done
- * [tail](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/tail.html) - Only supports tailing by characters, -n and -f still to be done
+ * [tail](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/tail.html) - Doesn't support the -f option yet
 
 ### Prior art
 
