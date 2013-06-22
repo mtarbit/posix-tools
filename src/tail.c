@@ -7,7 +7,7 @@
 
 const char * program_name;
 
-struct { long c, n; char f; } options;
+struct { char f; long c, n; } options;
 
 void usage() {
     pt_msg_usage("[-f] [-c number|-n number] [file]");
@@ -37,8 +37,8 @@ void seek_in_lines_backward(FILE *fp, long n) {
     long last_pos;
     long this_pos;
 
-    long tot_lines;
-    long dif_lines;
+    long lines_read;
+    long lines_over;
 
     n = labs(n);
 
@@ -46,7 +46,7 @@ void seek_in_lines_backward(FILE *fp, long n) {
         pt_die_fn("fseek");
     }
 
-    while (tot_lines < n) {
+    while (lines_read < n) {
         last_pos = ftell(fp);
         this_pos = last_pos - (LINE_MAX * 10);
 
@@ -57,7 +57,7 @@ void seek_in_lines_backward(FILE *fp, long n) {
         }
 
         while (fgets(buf, LINE_MAX, fp)) {
-            ++tot_lines;
+            ++lines_read;
         }
     }
 
@@ -65,8 +65,8 @@ void seek_in_lines_backward(FILE *fp, long n) {
         pt_die_fn("fseek");
     }
 
-    dif_lines = tot_lines - n;
-    while (dif_lines-- > 0) {
+    lines_over = lines_read - n;
+    while (lines_over-- > 0) {
         fgets(buf, LINE_MAX, fp);
     }
 }
@@ -109,10 +109,10 @@ int main(int argc, char *argv[]) {
 
     program_name = argv[0];
 
-    while ((opt = getopt(argc, argv, "c:fn:")) != -1) {
+    while ((opt = getopt(argc, argv, "fc:n:")) != -1) {
         switch (opt) {
-            case 'c': options.c = file_offset(optarg); break;
             case 'f': options.f = 1; break;
+            case 'c': options.c = file_offset(optarg); break;
             case 'n': options.n = file_offset(optarg); break;
             default:  usage(); break;
         }
