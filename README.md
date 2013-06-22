@@ -18,6 +18,7 @@ of blue smoke.
  * [echo](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/echo.html)
  * [env](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/env.html)
  * [false](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/false.html)
+ * [head](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/head.html)
  * [pwd](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/pwd.html)
  * [rm](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/rm.html)
  * [true](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/true.html)
