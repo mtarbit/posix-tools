@@ -19,4 +19,4 @@ $(archive): $(archive)(posix-tools.o)
 wc: -lm
 
 clean:
-	-rm $(archive) $(targets)
+	-rm -rf $(archive) $(targets) *.dSYM
