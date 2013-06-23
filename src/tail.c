@@ -32,40 +32,50 @@ void seek_in_bytes(FILE *fp, long n) {
 }
 
 void seek_in_lines_backward(FILE *fp, long n) {
-    char buf[LINE_MAX];
+    long min_pos = 0L;
+    long max_pos;
+    long cur_pos;
 
-    long last_pos;
-    long this_pos;
+    long max_len = LINE_MAX * 10;
+    long cur_len;
 
-    long lines_read;
+    long lines_read = 0;
     long lines_over;
+
+    char buf[LINE_MAX];
 
     n = labs(n);
 
-    if (fseek(fp, -1, SEEK_END) != 0) {
+    if (fseek(fp, 0L, SEEK_END) != 0) {
         pt_die_fn("fseek");
     }
 
+    cur_pos = ftell(fp);
+
     while (lines_read < n) {
-        last_pos = ftell(fp);
-        this_pos = last_pos - (LINE_MAX * 10);
+        max_pos = cur_pos;
+        cur_pos = max_pos - max_len;
 
-        if (this_pos < 0) this_pos = 0;
+        if (cur_pos < min_pos) cur_pos = min_pos;
 
-        if (fseek(fp, this_pos, SEEK_SET) != 0) {
+        if (fseek(fp, cur_pos, SEEK_SET) != 0) {
             pt_die_fn("fseek");
         }
 
-        while (fgets(buf, LINE_MAX, fp)) {
-            ++lines_read;
+        cur_len = (max_pos - cur_pos);
+        while (cur_len-- > 0) {
+            if (fgetc(fp) == '\n') ++lines_read;
         }
+
+        if (ftell(fp) >= max_pos) break;
     }
 
-    if (fseek(fp, this_pos, SEEK_SET) != 0) {
+    if (fseek(fp, cur_pos, SEEK_SET) != 0) {
         pt_die_fn("fseek");
     }
 
     lines_over = lines_read - n;
+
     while (lines_over-- > 0) {
         fgets(buf, LINE_MAX, fp);
     }
