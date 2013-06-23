@@ -21,6 +21,7 @@ of blue smoke.
  * [head](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/head.html)
  * [pwd](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/pwd.html)
  * [rm](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/rm.html)
+ * [tail](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/tail.html)
  * [true](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/true.html)
  * [wc](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/wc.html)
 
@@ -28,7 +29,6 @@ of blue smoke.
 
  * [cal](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/cal.html) - Only handles Gregorian calendar dates correctly (14th Sep 1752 onwards)
  * [ls](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/ls.html) - Does basic listings, but most of the formatting and options are still to be done
- * [tail](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/tail.html) - Doesn't support the -f option yet
 
 ### Prior art
 

@@ -98,14 +98,26 @@ void seek_in_lines(FILE *fp, long n) {
     }
 }
 
-void tail(FILE *fp) {
+void putf(FILE *fp) {
     char buf[LINE_MAX];
-
-    if (options.c) seek_in_bytes(fp, options.c);
-    if (options.n) seek_in_lines(fp, options.n);
 
     while (fgets(buf, LINE_MAX, fp)) {
         fputs(buf, stdout);
+    }
+}
+
+void tail(FILE *fp) {
+    if (options.c) seek_in_bytes(fp, options.c);
+    if (options.n) seek_in_lines(fp, options.n);
+
+    putf(fp);
+
+    if (options.f) {
+        while (1) {
+            sleep(1);
+            clearerr(fp);
+            putf(fp);
+        }
     }
 }
 
